@@ -1,0 +1,199 @@
+spring:
+  application:
+    name: screen-engine
+
+  # Primary datasource for metadata
+  datasource:
+    url: ${METADATA_DB_URL:jdbc:postgresql://localhost:5432/screen_engine_metadata}
+    username: ${METADATA_DB_USERNAME:postgres}
+    password: ${METADATA_DB_PASSWORD:postgres}
+    driver-class-name: ${METADATA_DB_DRIVER:org.postgresql.Driver}
+    hikari:
+      pool-name: MetadataPool
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # Jackson JSON configuration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+    time-zone: UTC
+
+  # Flyway database migration
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    table: FLYWAY_SCHEMA_HISTORY
+
+  # Security
+  security:
+    user:
+      name: admin
+      password: admin123
+
+# Server configuration
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on_param
+    include-exception: false
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.screenengine: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.jooq: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# SpringDoc OpenAPI configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+  show-actuator: false
+
+# Screen Engine specific configuration
+screen-engine:
+  # Data datasource (can be same as metadata or different)
+  data-datasource:
+    enabled: ${DATA_DB_ENABLED:false}
+    url: ${DATA_DB_URL:jdbc:postgresql://localhost:5432/erp_data}
+    username: ${DATA_DB_USERNAME:postgres}
+    password: ${DATA_DB_PASSWORD:postgres}
+    driver-class-name: ${DATA_DB_DRIVER:org.postgresql.Driver}
+    hikari:
+      pool-name: DataPool
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  # System parameters for substitution
+  parameters:
+    factory: ${SYSTEM_FACTORY:101}
+    user: ${SYSTEM_USER:ADMIN}
+    person-id: ${SYSTEM_PERSON_ID:0}
+    org-code: ${SYSTEM_ORG_CODE:DEFAULT}
+    accounting-org-id: ${SYSTEM_ACCOUNTING_ORG_ID:1}
+    accounting-period-id: ${SYSTEM_ACCOUNTING_PERIOD_ID:202401}
+    department-no: ${SYSTEM_DEPARTMENT_NO:10}
+
+  # SQL Engine configuration
+  sql:
+    dialect: ${SQL_DIALECT:POSTGRESQL}
+    max-results: 1000
+    query-timeout: 30
+    enable-debug-query: true
+
+  # Security configuration
+  security:
+    jwt:
+      secret: ${JWT_SECRET:screen-engine-secret-key-change-in-production}
+      expiration: 3600000  # 1 hour in milliseconds
+    cors:
+      allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:3000}
+      allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+      allowed-headers: "*"
+      allow-credentials: true
+
+  # Caching configuration (future)
+  cache:
+    enabled: false
+    ttl: 300  # 5 minutes
+
+---
+# Development profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/screen_engine_dev
+    username: postgres
+    password: postgres
+
+logging:
+  level:
+    com.screenengine: DEBUG
+    org.jooq: DEBUG
+
+screen-engine:
+  sql:
+    enable-debug-query: true
+
+---
+# Test profile
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  flyway:
+    enabled: false
+
+logging:
+  level:
+    root: WARN
+    com.screenengine: DEBUG
+
+---
+# Production profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 10
+
+logging:
+  level:
+    root: WARN
+    com.screenengine: INFO
+    org.springframework.web: WARN
+
+screen-engine:
+  sql:
+    enable-debug-query: false
+  security:
+    jwt:
+      secret: ${JWT_SECRET}  # Must be set via environment variable
