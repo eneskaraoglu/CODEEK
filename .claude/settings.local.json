@@ -22,7 +22,8 @@
       "Bash(timeout 5 tail:*)",
       "Bash(./mvnw spring-boot:run:*)",
       "Bash(timeout 10 tail:*)",
-      "Bash(npx kill-port:*)"
+      "Bash(npx kill-port:*)",
+      "Bash(./mvnw:*)"
     ]
   }
 }

@@ -71,6 +71,9 @@ public class AuthService {
 
         log.info("User {} logged in successfully", loginRequest.getUsername());
 
+        // Get primary role (remove ROLE_ prefix for frontend)
+        String primaryRole = roles.isEmpty() ? "USER" : roles.get(0).replace("ROLE_", "");
+
         return AuthResponse.builder()
                 .token(jwt)
                 .tokenType("Bearer")
@@ -82,6 +85,7 @@ public class AuthService {
                         .fullName(userPrincipal.getFullName())
                         .fabrikaKod(userPrincipal.getFabrikaKod())
                         .roles(roles)
+                        .role(primaryRole)
                         .build())
                 .build();
     }

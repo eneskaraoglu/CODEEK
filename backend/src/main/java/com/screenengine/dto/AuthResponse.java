@@ -32,5 +32,7 @@ public class AuthResponse {
         private String fullName;
         private Long fabrikaKod;
         private List<String> roles;
+        private String role; // Primary role for frontend convenience
+        private String createdAt;
     }
 }
