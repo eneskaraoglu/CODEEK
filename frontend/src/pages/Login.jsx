@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../services/api';
-import './Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -54,12 +53,14 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-container">
-        <h1>{isLogin ? 'Login' : 'Register'}</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 p-4">
+      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+          {isLogin ? 'Login' : 'Register'}
+        </h1>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
             <input
               type="text"
               name="username"
@@ -69,12 +70,13 @@ const Login = () => {
               required
               minLength={3}
               maxLength={50}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition"
             />
           </div>
 
           {!isLogin && (
             <>
-              <div className="form-group">
+              <div>
                 <input
                   type="text"
                   name="fullName"
@@ -84,9 +86,10 @@ const Login = () => {
                   required
                   minLength={1}
                   maxLength={200}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition"
                 />
               </div>
-              <div className="form-group">
+              <div>
                 <input
                   type="email"
                   name="email"
@@ -94,12 +97,13 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition"
                 />
               </div>
             </>
           )}
 
-          <div className="form-group">
+          <div>
             <input
               type="password"
               name="password"
@@ -109,19 +113,35 @@ const Login = () => {
               required
               minLength={6}
               maxLength={100}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition"
             />
           </div>
 
-          <button type="submit" className="submit-btn" disabled={loading}>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
             {loading ? 'Loading...' : isLogin ? 'Login' : 'Register'}
           </button>
         </form>
 
-        {message && <p className={`message ${message.includes('successful') ? 'success' : 'error'}`}>{message}</p>}
+        {message && (
+          <p className={`mt-4 p-3 rounded-lg text-sm text-center ${
+            message.includes('successful')
+              ? 'bg-green-100 text-green-800 border border-green-200'
+              : 'bg-red-100 text-red-800 border border-red-200'
+          }`}>
+            {message}
+          </p>
+        )}
 
-        <p className="toggle-text">
+        <p className="mt-6 text-center text-gray-600">
           {isLogin ? "Don't have an account? " : 'Already have an account? '}
-          <span onClick={() => setIsLogin(!isLogin)} className="toggle-link">
+          <span
+            onClick={() => setIsLogin(!isLogin)}
+            className="text-primary-600 hover:text-primary-700 font-semibold cursor-pointer underline"
+          >
             {isLogin ? 'Register' : 'Login'}
           </span>
         </p>
