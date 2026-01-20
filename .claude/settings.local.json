@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker-compose up:*)",
+      "Bash(docker exec:*)",
+      "Bash(mvn spring-boot:run:*)",
+      "Bash(where:*)",
+      "Bash(java -version:*)",
+      "Bash(choco --version:*)",
+      "Bash(curl:*)",
+      "Bash(chmod:*)",
+      "Bash(./mvnw.cmd spring-boot:run)",
+      "Bash(taskkill /F /FI \"WINDOWTITLE eq *mvnw.cmd*\")",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(./mvnw.cmd clean compile spring-boot:run:*)",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsInVzZXJJZCI6NSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc2ODg0OTUzNCwiZXhwIjoxNzY4ODUzMTM0fQ.Pk-33dzgzJOh2PUPxiRhwStrnZc-CJw3q0JqeN_fHEc\")"
+    ]
+  }
+}

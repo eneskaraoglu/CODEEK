@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for Screen Engine
+  postgres:
+    image: postgres:16-alpine
+    container_name: screen-engine-postgres
+    environment:
+      POSTGRES_DB: screen_engine_metadata
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/src/main/resources/db/init:/docker-entrypoint-initdb.d
+    networks:
+      - screen-engine-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # pgAdmin - PostgreSQL Web UI (optional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: screen-engine-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@screenengine.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - screen-engine-network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  screen-engine-network:
+    driver: bridge
