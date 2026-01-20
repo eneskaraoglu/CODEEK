@@ -15,7 +15,14 @@
       "Bash(findstr:*)",
       "Bash(taskkill:*)",
       "Bash(./mvnw.cmd clean compile spring-boot:run:*)",
-      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsInVzZXJJZCI6NSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc2ODg0OTUzNCwiZXhwIjoxNzY4ODUzMTM0fQ.Pk-33dzgzJOh2PUPxiRhwStrnZc-CJw3q0JqeN_fHEc\")"
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsInVzZXJJZCI6NSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc2ODg0OTUzNCwiZXhwIjoxNzY4ODUzMTM0fQ.Pk-33dzgzJOh2PUPxiRhwStrnZc-CJw3q0JqeN_fHEc\")",
+      "Bash(npm create:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout 5 tail:*)",
+      "Bash(./mvnw spring-boot:run:*)",
+      "Bash(timeout 10 tail:*)",
+      "Bash(npx kill-port:*)"
     ]
   }
 }
