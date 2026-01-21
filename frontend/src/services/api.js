@@ -19,6 +19,21 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Handle 401 responses (unauthorized) - redirect to login
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      // Clear auth data
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      // Redirect to login
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Auth API calls
 export const authAPI = {
   register: (userData) => api.post('/v1/auth/register', userData),
@@ -29,10 +44,17 @@ export const authAPI = {
   }
 };
 
-// Protected API example
+// User API calls
 export const userAPI = {
-  getProfile: () => api.get('/users/profile'),
+  getProfile: () => api.get('/v1/users/me'),
   updateProfile: (data) => api.put('/users/profile', data),
+
+  // Admin user management
+  getAllUsers: () => api.get('/v1/users'),
+  getUserById: (userId) => api.get(`/v1/users/${userId}`),
+  updateUser: (userId, data) => api.put(`/v1/users/${userId}`, data),
+  deleteUser: (userId) => api.delete(`/v1/users/${userId}`),
+  toggleUserStatus: (userId) => api.patch(`/v1/users/${userId}/toggle-status`),
 };
 
 export default api;
